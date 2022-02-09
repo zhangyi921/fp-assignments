@@ -1,0 +1,13 @@
+{
+  "name": "fp-assignments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/zhangyi921/fp-assignments.git",
+  "author": "Yi Zhang",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "typescript": "^4.5.5"
+  }
+}
