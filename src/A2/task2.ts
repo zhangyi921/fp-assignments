@@ -22,12 +22,12 @@ type ApiResponse<T extends Entity> =
     | { status: "success"; data: T[] }
     | { status: "error"; error: string };
 
-/* 1 */
-function fetchMockData(): Promise<ApiResponse<Post>>;
-function fetchMockData(postId: number): Promise<ApiResponse<Comment>>;
-function fetchMockData(postId?:number): Promise<ApiResponse<Post | Comment>> {
+/* 1 Overload function definition*/
+function fetchMockData(type: 'posts'): Promise<ApiResponse<Post>>;
+function fetchMockData(type: 'comments', postId: string): Promise<ApiResponse<Comment>>;
+function fetchMockData(type: 'posts' | 'comments', postId?:string) {
 
-    if (postId === undefined) {
+    if (type === 'posts') {
         return new Promise(resolve => {
             fetch('https://jsonplaceholder.typicode.com/posts/1')
                 .then((response) => response.json())
@@ -45,11 +45,12 @@ function fetchMockData(postId?:number): Promise<ApiResponse<Post | Comment>> {
 }
 
 /* 2 */
-const fetchComments = R.partial(fetchMockData, ['comments'])
-const fetchPosts = fetchMockData
+// partial application
+const fetchComments = async (postId: string) => await fetchMockData('comments', postId)
+const fetchPosts = async () => await fetchMockData('posts')
 
 async () => {
-    const commentsRemoteData: ApiResponse<Comment> = await fetchComments(6)
+    const commentsRemoteData: ApiResponse<Comment> = await fetchComments('6')
     const postsRemoteData: ApiResponse<Post> = await fetchPosts()
 }
 
