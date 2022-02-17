@@ -53,7 +53,7 @@ const avgGrages = calculateAvgGrades(students)
 
 
 // 2. Helper methods demonstration
-const mapAbsentStudentName = These.map<Student[], string[]>((students) => students.map((student) => student.student))
+const mapAbsentStudentName = These.map<Student[], string[]>((students) => students.filter(student => student.grade === undefined).map((student) => student.student))
 const avgGragesWithAbsentStudentName = mapAbsentStudentName(avgGrages)
 
 // contain doesn't make much sense here, just a demonstration of contain implementation
@@ -64,9 +64,9 @@ const contaions = <L, R>(t: These.These<L, R>, data: Either.Either<L, R>): boole
 )(t)
 // generate a either type
 const x = (): Either.Either<number, Student[]> => {
-    if (Math.random() > 0.5){
+    if (Math.random() > 0.5) {
         return Either.left(2)
-    }else {
+    } else {
         return Either.right([])
     }
 }
