@@ -56,7 +56,7 @@ const avgGrages = calculateAvgGrades(students)
 const mapAbsentStudentName = These.map<Student[], string[]>((students) => students.map((student) => student.student))
 const avgGragesWithAbsentStudentName = mapAbsentStudentName(avgGrages)
 
-// constain doesn't make much sense here, just for demonstration
+// contain doesn't make much sense here, just a demonstration of contain implementation
 const contaions = <L, R>(t: These.These<L, R>, data: Either.Either<L, R>): boolean => These.fold(
     (left1: L) => Either.fold((left2: L) => left1 === left2, () => false)(data),
     (right1) => Either.fold(() => false, (right2: R) => right1 === right2)(data),
@@ -70,9 +70,9 @@ const x = (): Either.Either<number, Student[]> => {
         return Either.right([])
     }
 }
-
+const eitherGradesOrStudents = x()
 // contain works.
-contaions(avgGrages, x())
+contaions(avgGrages, eitherGradesOrStudents)
 
 
 // 3. fold demonstration
