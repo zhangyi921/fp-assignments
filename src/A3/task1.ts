@@ -8,7 +8,6 @@ class Finished<T> {
     constructor(val: T) {
         this.val = val
     }
-    // access methods
     getVal() {
         return this.val
     }
@@ -19,7 +18,6 @@ class Progress<P> {
     constructor(val: P) {
         this.val = val
     }
-    // access methods
     getVal() {
         return this.val
     }
@@ -34,7 +32,10 @@ const isNotStarted = <T>(option: ProgressOption<T>): option is NotStarted => opt
 const isFinished = <T>(option: ProgressOption<T>): option is Finished<T> => option.tag === 'Finished'
 const isProgress = <T>(option: ProgressOption<T>): option is Progress<ProgressData> => option.tag === 'Progress'
 
-const fold = <T>(option: ProgressOption<T>, f: () => T): T => isFinished(option) ? option.getVal() : f()
+// access methods
+const getProgress = <T>(option: ProgressOption<T>, progressUnavailable: () => ProgressData): ProgressData => isProgress(option) ? option.getVal() : progressUnavailable()
+
+const fold = <T>(option: ProgressOption<T>, onNotFinished: () => T): T => isFinished(option) ? option.getVal() : onNotFinished()
 
 // helper methods
 const map = <T, U>(option: ProgressOption<T>, f: (t: T) => U, g: (p: ProgressData) => ProgressData): ProgressOption<U> => {
