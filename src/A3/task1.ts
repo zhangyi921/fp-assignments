@@ -1,3 +1,4 @@
+// discriminated union
 // constructors
 class NotStarted {
     readonly tag = 'NotStarted';
@@ -23,7 +24,6 @@ class Progress<P> {
     }
 }
 
-// discriminated union
 type ProgressData = { val: number }
 type ProgressOption<T> = NotStarted | Finished<T> | Progress<ProgressData>;
 
