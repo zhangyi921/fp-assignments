@@ -25,6 +25,10 @@ const extractProperties2 = (keys: string[]): (obj: Record<string, any>) => Recor
         return result
     }
 }
+const extractPropertiesImmutable = (keys: string[], obj: Record<string, any>): Record<string, any> => {
+    const entries = keys.map(key => [key, obj[key]])
+    return Object.fromEntries(entries);
+}
 
 // d. f: [A] → [B] → [[A,B]]
 const createPair = <A, B>(a: A[], b: B[]): [A, B][] => a.map((a, i) => [a, b[i]])
