@@ -94,11 +94,18 @@ const mapTree = <A, B>(f: (a: A) => B, tree: Tree<A>): Tree<B> => isBranch(tree)
     }) :
     new Leaf(f(tree.value))
 
-// 5. Remove node(leaf) if condition is true
-const filter = <A>(f: (a: A) => boolean, tree: Branch<A>): Branch<A> => new Branch({
-    left: tree.left && isLeaf(tree.left) ? (f(tree.left.value) ? undefined : tree.left) : tree.left,
-    right: tree.right && isLeaf(tree.right) ? (f(tree.right.value) ? undefined : tree.right) : tree.right
-})
+// 5. Remove node(leaf) if condition is true. If a leaf is passed in and removed, return undefined
+const filter = <A>(f: (a: A) => boolean, tree?: Tree<A>): Tree<A> | undefined => {
+    if (!tree) return
+    if (isBranch(tree)) {
+        return new Branch({
+            left: filter(f, tree.left),
+            right: filter(f, tree.right)
+        })
+    } else { // tree is a leaf
+        return f(tree.value) ? undefined : tree
+    }
+}
 
 // 6. branch + branch = branch, leaf + leaf = leaf, branch + leaf = branch
 const zip = <A>(tree1: Tree<A>, tree2?: Tree<A>): ZippedTree<A> => {
