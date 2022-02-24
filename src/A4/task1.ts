@@ -1,11 +1,14 @@
+// 1.
 type CustomOmit<T, Keys> = {
     [K in Exclude<keyof T, Keys>]: T[K]
 };
 
+// 2.
 type CustomPick<T, Keys> = {
     [K in Extract<keyof T, Keys>]: T[K]
 };
 
+// 3.
 type CustomPartical<T> = {
     [K in keyof T]?: T[K]
 }
@@ -14,31 +17,17 @@ type CustomRequired<T> = {
     [K in keyof T]-?: T[K]
 }
 
-
-
-
-interface Props {
-    a?: number;
-    b?: string;
+// 4.
+type X = {
+    x: string;
+    y: string;
+    z: string;
 }
 
-type keys = keyof Props
-type z = {
-    [K in keyof Props]: Exclude<Props[K], undefined>
-}
-type z2 = {
-    [K in keys]: Exclude<Props[K], undefined>
+interface Y extends X {
+    s: string;
+    t: string;
+    u: string;
 }
 
-type test = CustomRequired<Props>
-
-const obj2: CustomRequired<Props> = { a: 5 };
-
-interface xyz {
-    x: number;
-    y: number;
-    z: number;
-}
-
-type abc = CustomPartical<xyz>
-const ddd: CustomPartical<xyz> = {x: 4}
+type Z = CustomOmit<Y, keyof X>
