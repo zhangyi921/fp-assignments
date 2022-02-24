@@ -131,8 +131,8 @@ const zip = <A>(tree1: Tree<A>, tree2?: Tree<A>): ZippedTree<A> => {
             }
         } else { // tree 1 is branch
             return new ZippedBranch({
-                left: tree1.left ? zip(tree1.left, isLeaf(tree2) ? tree2 : tree2.left) : undefined,
-                right: tree1.right ? zip(tree1.right, isLeaf(tree2) ? tree2 : tree2.right) : undefined,
+                left: tree1.left ? zip(tree1.left, isLeaf(tree2) ? undefined: tree2.left) : undefined,
+                right: tree1.right ? zip(tree1.right, isLeaf(tree2) ? undefined : tree2.right) : undefined,
                 value: isLeaf(tree2) ? tree2.value : undefined
             })
         }
