@@ -1,11 +1,14 @@
 {
   "name": "fp-assignments",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.0.4",
+  "main": "src/index.ts",
   "repository": "https://github.com/zhangyi921/fp-assignments.git",
   "author": "Yi Zhang",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "build": "npx tsc"
+  },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/ramda": "^0.27.64",

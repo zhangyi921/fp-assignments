@@ -1,0 +1,1 @@
+export * from './A4/task3'

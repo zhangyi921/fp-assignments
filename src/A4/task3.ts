@@ -1,7 +1,7 @@
-type Tree<A> = Leaf<A> | Branch<A>;
-type ZippedTree<A> = ZippedLeaf<A> | ZippedBranch<A>
+export type Tree<A> = Leaf<A> | Branch<A>;
+export type ZippedTree<A> = ZippedLeaf<A> | ZippedBranch<A>
 
-class Leaf<A> {
+export class Leaf<A> {
     tag: "leaf" = "leaf";
     readonly value: A;
 
@@ -11,7 +11,7 @@ class Leaf<A> {
 }
 
 // made left and right optional for easier filtering
-class Branch<A> {
+export class Branch<A> {
     tag: "branch" = "branch";
     readonly left?: Tree<A>;
     readonly right?: Tree<A>;
@@ -22,7 +22,7 @@ class Branch<A> {
     }
 }
 
-class ZippedLeaf<A> {
+export class ZippedLeaf<A> {
     tag: "leaf" = "leaf";
     readonly values: A[] = [];
 
@@ -31,7 +31,7 @@ class ZippedLeaf<A> {
     }
 }
 
-class ZippedBranch<A> {
+export class ZippedBranch<A> {
     tag: "branch" = "branch";
     readonly left?: ZippedTree<A>;
     readonly right?: ZippedTree<A>;
@@ -45,12 +45,12 @@ class ZippedBranch<A> {
 }
 
 // type gruard
-const isLeaf = <A>(tree: Tree<A>): tree is Leaf<A> => tree.tag === 'leaf'
-const isBranch = <A>(tree: Tree<A>): tree is Branch<A> => tree.tag === 'branch'
+export const isLeaf = <A>(tree: Tree<A>): tree is Leaf<A> => tree.tag === 'leaf'
+export const isBranch = <A>(tree: Tree<A>): tree is Branch<A> => tree.tag === 'branch'
 
 // 1.
-type SizeResult = { leaves: number, branch: number }
-const size = <A>(tree: Tree<A>): SizeResult => {
+export type SizeResult = { leaves: number, branch: number }
+export const size = <A>(tree: Tree<A>): SizeResult => {
     if (isBranch(tree)) {
         const leftSize: SizeResult = tree.left ? size(tree.left) : { leaves: 0, branch: 0 }
         const rightSize: SizeResult = tree.right ? size(tree.right) : { leaves: 0, branch: 0 }
@@ -63,7 +63,7 @@ const size = <A>(tree: Tree<A>): SizeResult => {
 }
 
 // 2. undefined is returned when this tree has no leaf
-const max = <A>(tree?: Tree<A>): A | undefined => {
+export const max = <A>(tree?: Tree<A>): A | undefined => {
     if (tree) {
         if (isBranch(tree)) {
             const leftMax = max(tree.left)
@@ -77,7 +77,7 @@ const max = <A>(tree?: Tree<A>): A | undefined => {
 }
 
 // 3.
-const depth = <A>(tree: Tree<A>): number => {
+export const depth = <A>(tree: Tree<A>): number => {
     if (isBranch(tree)) {
         const leftDepth = tree.left ? depth(tree.left) + 1 : 0
         const rightDepth = tree.right ? depth(tree.right) + 1 : 0
@@ -87,7 +87,7 @@ const depth = <A>(tree: Tree<A>): number => {
 }
 
 // 4.
-const mapTree = <A, B>(f: (a: A) => B, tree: Tree<A>): Tree<B> => isBranch(tree) ?
+export const mapTree = <A, B>(f: (a: A) => B, tree: Tree<A>): Tree<B> => isBranch(tree) ?
     new Branch({
         left: tree.left ? mapTree(f, tree.left) : undefined,
         right: tree.right ? mapTree(f, tree.right) : undefined
@@ -95,7 +95,7 @@ const mapTree = <A, B>(f: (a: A) => B, tree: Tree<A>): Tree<B> => isBranch(tree)
     new Leaf(f(tree.value))
 
 // 5. Remove node(leaf) if condition is true. If a leaf is passed in and removed, return undefined
-const filter = <A>(f: (a: A) => boolean, tree?: Tree<A>): Tree<A> | undefined => {
+export const filter = <A>(f: (a: A) => boolean, tree?: Tree<A>): Tree<A> | undefined => {
     if (!tree) return
     if (isBranch(tree)) {
         return new Branch({
@@ -108,7 +108,7 @@ const filter = <A>(f: (a: A) => boolean, tree?: Tree<A>): Tree<A> | undefined =>
 }
 
 // 6. branch + branch = branch, leaf + leaf = leaf, branch + leaf = branch
-const zip = <A>(tree1: Tree<A>, tree2?: Tree<A>): ZippedTree<A> => {
+export const zip = <A>(tree1: Tree<A>, tree2?: Tree<A>): ZippedTree<A> => {
     if (!tree2) { // only tree1
         if (isLeaf(tree1)) {
             return new ZippedLeaf([tree1.value])
