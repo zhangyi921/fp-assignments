@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "fp-ts": "^2.11.8",
-    "inquirer": "^8.2.0",
+    "inquirer": "^8.2.1",
     "ramda": "^0.28.0",
-    "rxjs": "^7.5.4"
+    "rxjs": "^7.5.5"
   }
 }

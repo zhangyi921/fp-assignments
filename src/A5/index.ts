@@ -20,6 +20,7 @@ class IsOrange {
   modelHistory: Model[] = [];
   constructor(initalState: Model, actionSource: Observable<CMD>) {
     this.init(initalState)
+    this.modelHistory.push(initalState);
     const subscription = actionSource.subscribe((cmd) => {
       const latestModel = this.modelHistory[this.modelHistory.length - 1];
       const newModel = this.update(latestModel, newAction(cmd.value));
@@ -29,7 +30,6 @@ class IsOrange {
   }
   
   init(model: Model){
-    this.modelHistory.push(model);
     this.view(model);
   }
 
@@ -73,3 +73,13 @@ const source = defer(() =>
 const actionSource = source.pipe(repeat());
 
 new IsOrange({ isOrange: false, iterationCount: 0 }, actionSource)
+
+// In react it would look like initial 
+// 1. Create initial state
+// 2. React render initial state
+// 3. User create action
+// 4. Reducer create new state based on current state and user action
+// 5. React render new state
+// Using redux in HeyAuto can be identified as FRP
+// If we have more than one action, partial function applicaiton can be applied in the app.
+// Update function can be composition of reducer function, action creation function

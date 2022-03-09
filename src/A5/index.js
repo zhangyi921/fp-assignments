@@ -6,69 +6,41 @@ var newAction = function (color) { return ({ color: color }); };
 var IsOrange = /** @class */ (function () {
     function IsOrange(initalState, actionSource) {
         var _this = this;
-        this.render(initalState);
-        actionSource.subscribe(function (cmd) { return _this.update(initalState, newAction(cmd.value)); });
+        this.modelHistory = [];
+        this.init(initalState);
+        this.modelHistory.push(initalState);
+        var subscription = actionSource.subscribe(function (cmd) {
+            var latestModel = _this.modelHistory[_this.modelHistory.length - 1];
+            var newModel = _this.update(latestModel, newAction(cmd.value));
+            _this.modelHistory.push(newModel);
+        });
+        setTimeout(function () { return subscription.unsubscribe(); }, 100000);
     }
-    IsOrange.prototype.render = function (model) {
+    IsOrange.prototype.init = function (model) {
+        this.view(model);
+    };
+    IsOrange.prototype.view = function (model) {
         if (model.isOrange) {
-            console.log('This color is orange!', model.iterationCount);
+            console.log("This color is orange!", "iteration: ", model.iterationCount);
         }
         else {
-            console.log('This color is not orange!', model.iterationCount);
+            console.log("This color is not orange!", "iteration: ", model.iterationCount);
         }
     };
     IsOrange.prototype.reducer = function (model, action) {
-        console.log('rducer');
+        console.log("rducer");
         return {
-            isOrange: action.color === '123',
-            iterationCount: model.iterationCount + 1,
-            subscriptions: subscriptions
+            isOrange: action.color === "FFA500",
+            iterationCount: model.iterationCount + 1
         };
     };
     IsOrange.prototype.update = function (model, action) {
         var newModel = this.reducer(model, action);
-        console.log(model, newModel);
-        this.render(newModel);
+        this.view(newModel);
+        return newModel;
     };
     return IsOrange;
 }());
-var IsOrange2 = /** @class */ (function () {
-    function IsOrange2(actionSource) {
-        var _this = this;
-        this.actionSource = actionSource;
-        var initalState = {
-            isOrange: false,
-            iterationCount: 0,
-            subscriptions: [this.actionSource.subscribe(function (cmd) { return _this.update(initalState, newAction(cmd.value)); })]
-        };
-        this.render(initalState);
-    }
-    IsOrange2.prototype.render = function (model) {
-        if (model.isOrange) {
-            console.log('This color is orange!', model.iterationCount);
-        }
-        else {
-            console.log('This color is not orange!', model.iterationCount);
-        }
-    };
-    IsOrange2.prototype.reducer = function (model, action) {
-        var _this = this;
-        console.log('rducer');
-        model.subscriptions[0].unsubscribe();
-        return {
-            isOrange: action.color === '123',
-            iterationCount: model.iterationCount + 1,
-            subscriptions: [this.actionSource.subscribe(function (cmd) { return _this.update(model, newAction(cmd.value)); })]
-        };
-    };
-    IsOrange2.prototype.update = function (model, action) {
-        var newModel = this.reducer(model, action);
-        console.log(model, newModel);
-        this.render(newModel);
-    };
-    return IsOrange2;
-}());
-var processCommand = function (cmd) { return console.log(cmd); };
 var source = (0, rxjs_1.defer)(function () {
     return inquirer.prompt([
         {
@@ -78,8 +50,5 @@ var source = (0, rxjs_1.defer)(function () {
         },
     ]);
 });
-var example = source.pipe((0, rxjs_1.repeat)());
-new IsOrange({ iterationCount: 0, isOrange: false }, example);
-// const subscription = example.subscribe((cmd) => processCommand(cmd));
-// Unsubscribe/kill after a duration
-// setTimeout(() => subscription.unsubscribe(), 100000);
+var actionSource = source.pipe((0, rxjs_1.repeat)());
+new IsOrange({ isOrange: false, iterationCount: 0 }, actionSource);
